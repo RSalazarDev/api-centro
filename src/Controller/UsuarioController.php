@@ -122,7 +122,7 @@ class UsuarioController extends AbstractController {
         $credenciales = $auth->getCredentials($request);
 
         $usuario = $auth->getUser($credenciales, $userProvider);
-//El email no lo cambiamos ya que cerraria la sesion.
+
         if ($usuario) {
             $data = json_decode($request->getContent(), true);
             
