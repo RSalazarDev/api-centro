@@ -125,16 +125,14 @@ class UsuarioController extends AbstractController {
 
         if ($usuario) {
             $data = json_decode($request->getContent(), true);
-            $email = $data['email'];
+            
             $pwd = $data['password'];
             $nombre = $data['nombre'];
             $apellidos = $data['apellidos'];
             $telefono = $data['telefono'];
             $social = $data['social'];
             
-            if (!empty($email)) {
-                $usuario->setEmail($email);
-            }
+            
             if (!empty($password)) {
                 $usuario->setPassword(password_hash($password, PASSWORD_BCRYPT));
             }
