@@ -5,7 +5,15 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Especialidad;
+use Firebase\JWT\JWT;
+use App\Security\JwtAuthenticator;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+
+
 
 class EspecialidadController extends AbstractController
 {

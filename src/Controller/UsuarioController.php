@@ -8,12 +8,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Usuario;
-use DateTime;
 use Firebase\JWT\JWT;
+use App\Security\JwtAuthenticator;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use DateTime;
 
-class UsuarioController extends AbstractController
-{
-    
+
+class UsuarioController extends AbstractController {
+
     /**
      * @Route("/usuarios/login", name="login", methods={"POST"})
      */
@@ -49,25 +52,22 @@ class UsuarioController extends AbstractController
         }
         return new JsonResponse(['error' => 'Faltan parámetros'], Response::HTTP_PARTIAL_CONTENT);
     }
-    
-    
-    
-    
+
     /**
      * @Route("/usuarios/registro", name="registro", methods={"POST"})
      */
     public function registrar(Request $request) {
         $data = json_decode($request->getContent(), true);
-      
+
         $email = $data['email'];
         $password = $data['password'];
         $nombre = $data['nombre'];
         $apellidos = $data['apellidos'];
         $telefono = $data['telefono'];
         $social = $data['social'];
-        
-        
-        if (empty($email)||empty($password)||empty($nombre)||empty($apellidos)||empty($social)||empty($telefono)) {
+
+
+        if (empty($email) || empty($password) || empty($nombre) || empty($apellidos) || empty($social) || empty($telefono)) {
             return new JsonResponse(['error' => 'Faltan parámetros'], Response::HTTP_PARTIAL_CONTENT);
         }
 
@@ -79,14 +79,13 @@ class UsuarioController extends AbstractController
         $usuario->setSeguridadSocial($social);
         $usuario->setPassword(password_hash($password, PASSWORD_BCRYPT));
 
-        
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($usuario);
         $em->flush();
         return new JsonResponse(['respuesta' => 'Usuario añadido'], Response::HTTP_OK);
     }
-    
-    
+
     /**
      * @Route("/usuarios", name="get_usuario", methods={"GET"})
      */
@@ -102,7 +101,10 @@ class UsuarioController extends AbstractController
             $data = [
                 'id' => $usuario->getId(),
                 'usuario' => $usuario->getUsername(),
-                'email' => $usuario->getEmail()
+                'email' => $usuario->getEmail(),
+                'nombre' => $usuario->getNombre(),
+                'apellidos' => $usuario->getApellidos(),
+                'seguridad_social' => $usuario->getSeguridadSocial()
             ];
 
             return new JsonResponse($data, Response::HTTP_OK);
@@ -123,15 +125,25 @@ class UsuarioController extends AbstractController
 
         if ($usuario) {
             $data = json_decode($request->getContent(), true);
-            $username = $data['usuario'];
+            $email = $data['email'];
             $pwd = $data['password'];
-
-            if (!empty($username)) {
-                $usuario->setUsername($username);
+            $nombre = $data['nombre'];
+            $apellidos = $data['apellidos'];
+            $telefono = $data['telefono'];
+            $social = $data['social'];
+            
+            if (!empty($email)) {
+                $usuario->setEmail($email);
             }
             if (!empty($password)) {
                 $usuario->setPassword(password_hash($password, PASSWORD_BCRYPT));
             }
+            
+            $usuario->setNombre($nombre);
+            $usuario->setApellidos($apellidos);
+            $usuario->setTelefono($telefono);
+            $usuario->setSeguridadSocial($social);
+            
             $em->persist($usuario);
             $em->flush();
             return new JsonResponse(['respuesta' => 'Usuario modificado correctamente'], Response::HTTP_OK);
@@ -157,5 +169,5 @@ class UsuarioController extends AbstractController
         }
         return new JsonResponse(['error' => 'Usuario no logueado'], Response::HTTP_UNAUTHORIZED);
     }
-    
+
 }

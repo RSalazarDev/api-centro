@@ -4,6 +4,7 @@
 namespace App\Security;
 
 use App\Entity\Usuario;
+use Firebase\JWT\JWT;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\Request;
