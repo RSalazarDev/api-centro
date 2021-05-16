@@ -61,9 +61,13 @@ class Usuario implements UserInterface
      */
     private $citas;
 
+  
+
     public function __construct()
     {
         $this->citas = new ArrayCollection();
+        
+        
     }
 
     public function getId(): ?int
@@ -224,4 +228,8 @@ class Usuario implements UserInterface
 
         return $this;
     }
+
+ 
+
+   
 }

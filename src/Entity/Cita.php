@@ -39,6 +39,15 @@ class Cita
      */
     private $usuario;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Sala::class, inversedBy="citas")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $sala;
+
+
+  
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,4 +100,20 @@ class Cita
 
         return $this;
     }
+
+    public function getSala(): ?Sala
+    {
+        return $this->sala;
+    }
+
+    public function setSala(?Sala $sala): self
+    {
+        $this->sala = $sala;
+
+        return $this;
+    }
+
+  
+
+ 
 }
